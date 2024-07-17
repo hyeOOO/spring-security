@@ -26,28 +26,15 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        //람다로 바꾸면 이해하기 어려울까봐 가만히 둠
         http
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .formLogin(form -> form
-//                        .loginPage("/loginPage")
-                        .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/failed")
-                        .usernameParameter("userId")
-                        .passwordParameter("passwd")
-//                        .successHandler((request, response, authentication) -> {
-//                            System.out.println("SecurityConfig.onAuthenticationSuccess");
-//                            System.out.println("authentication = " + authentication);
-//
-//                            response.sendRedirect("/home");
-//                        })
-//                        .failureHandler((request, response, exception) -> {
-//                            System.out.println("exception = " + exception.getMessage());
-//                            response.sendRedirect("/login");
-//                        })
-                        .permitAll()
-                );
+                .formLogin(Customizer.withDefaults())
+                .rememberMe(rememberMe -> rememberMe
+                        .alwaysRemember(false)
+                        .userDetailsService(userDetailsService())
+                        .rememberMeParameter("remember")
+                        .rememberMeCookieName("remember")
+                        .key("security"));
 
         return http.build();
     }
