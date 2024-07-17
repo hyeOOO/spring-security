@@ -27,14 +27,14 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/anonymous").hasRole("GUEST")
+                        .requestMatchers("/anonymousContext", "/authentication").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
-                .rememberMe(rememberMe -> rememberMe
-                        .alwaysRemember(false)
-                        .userDetailsService(userDetailsService())
-                        .rememberMeParameter("remember")
-                        .rememberMeCookieName("remember")
-                        .key("security"));
+                .anonymous(anonymous -> anonymous
+                        .principal("guest")
+                        .authorities("ROLE_GUEST"));
 
         return http.build();
     }
