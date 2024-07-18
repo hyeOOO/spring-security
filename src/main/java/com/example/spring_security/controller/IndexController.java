@@ -28,6 +28,7 @@ public class IndexController {
 
     @GetMapping("/anonymous")
     public String anonymous(){
+
         return "anonymous";
     }
 
@@ -43,5 +44,10 @@ public class IndexController {
     @GetMapping("/anonymousContext")
     public String anonymousContext(@CurrentSecurityContext SecurityContext context){
         return context.getAuthentication().getName();
+    }
+
+    @GetMapping("/logoutSuccess")
+    public String logoutSuccess(){
+        return "logoutSuccess";
     }
 }
